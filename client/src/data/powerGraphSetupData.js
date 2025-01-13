@@ -22,7 +22,7 @@ const powerGraphSetupData = [
         unit: "kg",
         name: "car_weight",
         fullName: "Masa pojazdu",
-        description: "Chyba nie ma co zbytnio tego opisywać",
+        description: "Jest to masa jaką posiada samochód w momencie pomiaru wraz z kierowcą, płynami eksploatacyjnymi oraz wszystkimi akcesoriami.",
         altOption: false
       },
       {

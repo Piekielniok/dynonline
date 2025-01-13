@@ -117,7 +117,7 @@ const aeroSetupData = [
     id: 5,
     step: 6,
     type: "",
-    title: "Już prawie koniec. Wystarczy kliknąć dalej. Fajnie nie?",
+    title: "Już prawie koniec. Wystarczy kliknąć dalej.",
     data: []
   },
 ];

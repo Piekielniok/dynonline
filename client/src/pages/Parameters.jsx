@@ -102,8 +102,13 @@ function Parameters() {
           });
           break;
         case 4:
-          break;
-        case 5:
+          import("../data/rollSetupData").then(data => {
+            setSelectedOptionData(data.default);
+            setSetupSteps(data.default[0].step);
+            setSetupTitle(data.default[0].title);
+            setParametersData({ option: "roll" });
+            handleItemsData(data.default[0]);
+          });
           break;
       }
     }
