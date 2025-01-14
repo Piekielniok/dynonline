@@ -69,9 +69,12 @@ const aeroSetupData = [
     data: [
       {
         id: 1,
-        name: "roll_all_speed_graph",
-        fullName: "Dla wszystkich prędkości",
-        altOption: false
+        name: "roll_speed_range_graph",
+        fullName: "Dla zakresu prędkości",
+        altOption: true,
+        altOptionType: "",
+        altOptionTitle: "",
+        altOptionComponent: "speed_range"
       },
       {
         id: 2,

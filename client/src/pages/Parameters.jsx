@@ -47,7 +47,7 @@ function Parameters() {
     }
   };
 
-  const handleParametersAccelData = () => {
+  const handleParametersAccelData = (data) => {
     for (let key in data) {
       if (!data.hasOwnProperty(key)) continue;
       setParametersData(prevState => {

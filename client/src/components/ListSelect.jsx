@@ -3,7 +3,11 @@ import infoModalIcon from '../assets/infoModalIcon.svg';
 
 function ListSelect(props) {
   const [selectedOption, setSelectedOption] = useState(1);
-  const [altData, setAltData] = useState({});
+  const [altData, setAltData] = useState({
+    set_speed: 50,
+    speed_range_min: 0,
+    speed_range_max: 200
+  });
 
   const handleAltDataChange = (name, value) => {
     setAltData(prevState => {
@@ -22,10 +26,21 @@ function ListSelect(props) {
         component = (
           <div className='list-select-alt-container' style={{opacity: 1}}>
             <span className='list-select-alt-title'>Prędkość</span>
-            <input type="number" min="0" max="500" step="1" value={altData.set_speed || ''} placeholder='90' onChange={e => handleAltDataChange("set_speed", e.target.value)}></input>
+            <input type="number" min="0" max="500" step="1" value={altData.set_speed || ''} onChange={e => handleAltDataChange("set_speed", e.target.value)} />
             <span className='list-select-unit'>km/h</span>
           </div>
         );
+        break;
+      case 'speed_range':
+        component = (
+          <div className='list-select-alt-container' style={{opacity: 1}}>
+            <span className='list-select-alt-title'>Prędkość</span>
+            <input type="number" min="0" max={altData.speed_range_max} step="1" value={altData.speed_range_min || 0} onChange={e => handleAltDataChange("speed_range_min", e.target.value)} />
+            <span> - </span>
+            <input type="number" min={altData.speed_range_min} max="500" step="1" value={altData.speed_range_max || 200} onChange={e => handleAltDataChange("speed_range_max", e.target.value)} />
+            <span className='list-select-unit'>km/h</span>
+          </div>
+        )
         break;
       default:
         component = '';
