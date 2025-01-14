@@ -89,7 +89,8 @@
 }
 
 .parameters-container,
-.results-container {
+.results-container,
+.login-container {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -411,6 +412,87 @@ span.accel-table-interval-unit {
 
 .results-container {
   color: #fff;
+}
+
+.login-switch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .3rem;
+  margin-top: auto;
+  width: 100%;
+  height: 3rem;
+}
+
+.login-switch-container button,
+.login-form-container button,
+.register-form-container button {
+  padding: .5rem 1rem;
+  color: #fff;
+  background: #2f2f2f;
+  font-size: .9rem;
+  font-weight: 600;
+  border: 0;
+  border-radius: 1rem;
+  transition: .25s ease-in-out;
+}
+
+.login-switch-container button.selected,
+.login-form-container button.form-filled,
+.register-form-container button.form-filled {
+  padding: .5rem 1.2rem;
+  color: #000;
+  background: #fff;
+  font-size: 1.1rem;
+}
+
+.login-form-container,
+.register-form-container {
+  display: grid;
+  grid-template-columns: 7.2rem 1fr;
+  gap: .5rem;
+  margin: 0 auto auto auto;
+  padding: 1rem;
+  width: 100%;
+  max-width: 30rem;
+  color: #fff;
+  background: #2f2f2f;
+  border-radius: 1.5rem;
+}
+
+.login-form-container {
+  grid-template-columns: 3.5rem 1fr;
+}
+
+.login-form-container h1,
+.register-form-container h1 {
+  grid-column: 1 / 3;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.login-form-container input,
+.register-form-container input {
+  padding: .4rem .8rem;
+  width: 100%;
+  font-weight: 600;
+  border: 0;
+  border-radius: 1rem;
+}
+
+.login-form-container label,
+.register-form-container label {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  font-weight: 600;
+}
+
+.login-form-container button,
+.register-form-container button {
+  grid-column: 1 / 3;
+  margin-top: 1rem;
+  background: #3c3c3c;
 }
 
 @keyframes list-select-alt-anim {
