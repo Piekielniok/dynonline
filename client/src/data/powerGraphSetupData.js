@@ -100,6 +100,19 @@ const powerGraphSetupData = [
         fullName: "Średnica felgi",
         description: "",
         altOption: false
+      },
+      {
+        id: 4,
+        type: "value",
+        min: 0.1,
+        max: 6,
+        step: 0.1,
+        default: 2.5,
+        unit: "bar",
+        name: "tyre_pressure",
+        fullName: "Ciśnienie opon",
+        description: "",
+        altOption: false
       }
     ]
   },

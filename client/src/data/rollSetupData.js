@@ -45,20 +45,20 @@ const aeroSetupData = [
         fullName: "Ciśnienie opon",
         description: "",
         altOption: false
-      },
-      {
-        id: 2,
-        type: "value",
-        min: 1,
-        max: 5,
-        step: 1,
-        default: 3,
-        unit: "",
-        name: "tyre_class",
-        fullName: "Klasa efektywności paliwowej opony",
-        description: "Informacje o klasie efektywności można znaleźć na etykiecie na oponie. Według zmian w etykietach opon wprowadzonych w 2021 roku, skala wynosi od A do E. 1 = A, 6 = E",
-        altOption: false
       }
+      // {
+      //   id: 2,
+      //   type: "value",
+      //   min: 1,
+      //   max: 5,
+      //   step: 1,
+      //   default: 3,
+      //   unit: "",
+      //   name: "tyre_class",
+      //   fullName: "Klasa efektywności paliwowej opony",
+      //   description: "Informacje o klasie efektywności można znaleźć na etykiecie na oponie. Według zmian w etykietach opon wprowadzonych w 2021 roku, skala wynosi od A do E. 1 = A, 6 = E",
+      //   altOption: false
+      // }
     ]
   },
   {
@@ -86,14 +86,14 @@ const aeroSetupData = [
         altOptionComponent: "speed_value"
       }
     ]
-  },
-  {
-    id: 5,
-    step: 6,
-    type: "",
-    title: "Już prawie koniec. Wystarczy kliknąć dalej.",
-    data: []
-  },
+  }
+  // {
+  //   id: 5,
+  //   step: 6,
+  //   type: "",
+  //   title: "Już prawie koniec. Wystarczy kliknąć dalej.",
+  //   data: []
+  // },
 ];
 
 export default aeroSetupData;

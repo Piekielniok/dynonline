@@ -115,14 +115,14 @@ const aeroSetupData = [
         altOptionComponent: "speed_value"
       }
     ]
-  },
-  {
-    id: 5,
-    step: 6,
-    type: "",
-    title: "Już prawie koniec. Wystarczy kliknąć dalej.",
-    data: []
-  },
+  }
+  // {
+  //   id: 5,
+  //   step: 6,
+  //   type: "",
+  //   title: "Już prawie koniec. Wystarczy kliknąć dalej.",
+  //   data: []
+  // },
 ];
 
 export default aeroSetupData;

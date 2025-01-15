@@ -24,25 +24,6 @@ function AccelTable(props) {
     speed_ratio: 0
   });
   const [intervals, setIntervals] = useState();
-  // let gearsList = [];
-
-  // const handleDataChange = (gear, value) => {
-  //   setData(prevState => {
-  //     return {
-  //       ...prevState,
-  //       [`gear_${gear}`]: value
-  //     }
-  //   });
-  // };
-
-  // for (let i = 1; i <= data.number_of_gears; i++) {
-  //   gearsList.push(
-  //     <div key={i} className="gears-table-element">
-  //       <span>{i}.</span>
-  //       <input type="number" min="0" max="10" step="0.01" value={data[`gear_${i}`] || ''} onChange={e => handleDataChange(i, e.target.value)}/>
-  //     </div>
-  //   );
-  // }
 
   const handleIntervalData = (e, id, dataType) => {
     setData(prevState => {
@@ -163,34 +144,35 @@ function AccelTable(props) {
         <span>Dla podanych parametrów, zakres prędkości pomiaru wynosi</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
-
+          W zakresie prędkości uwzględniony jest większy zakres obrotów silnika, aby obliczając wartości średnie z podanych przedziałów, wykres przedstawiał odpowiedni zakres.
         </div>
       </div>
-      <h2>{accelSpeed.min} - {accelSpeed.max} <b>km/h</b></h2>
+      <h2>{Math.round(((accelSpeed.min * 0.90) + Number.EPSILON) * 10) / 10} - {Math.round(((accelSpeed.max + (accelSpeed.min * 0.10)) + Number.EPSILON) * 10) / 10} <b>km/h</b></h2>
       <div className="accel-table-top-container">
         <span>Dane z przyspieszenia</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
-          Zaznacz w jakiej formie wprowadzone mają zostać dane z pomiaru: w postaci prędkości pojazdu albo prędkości obrotowej silnika, a następnie podaj czasy uzyskane w przedziałach prędkości. Im większa ilość przedziałów tym dokładniejsze bedą obliczenia.
+          {/* Zaznacz w jakiej formie wprowadzone mają zostać dane z pomiaru: w postaci prędkości pojazdu albo prędkości obrotowej silnika, a następnie podaj czasy uzyskane w przedziałach prędkości. Im większa ilość przedziałów tym dokładniejsze bedą obliczenia. */}
+          Podaj czasy uzyskane w danych przedziałach prędkości. Im większa ilość przedziałów tym dokładniejsze bedą obliczenia.
         </div>
       </div>
       <div className="accel-table-spacer"></div>
       <div className="accel-table-intervals">
         {data.accel_intervals.map(interval => {
           return (
-            <>
-            <div key={interval.id} className="accel-table-interval-container">
-              <input type="number" min={accelSpeed.min} max={accelSpeed.max} step="0.1" value={interval.min_speed} onChange={e => handleIntervalData(e, interval.id, "min")}/>
-              <span> - </span>
-              <input type="number" min={accelSpeed.min} max={accelSpeed.max} step="0.1" value={interval.max_speed} onChange={e => handleIntervalData(e, interval.id, "max")}/>
-              <span className="accel-table-interval-unit">km/h</span>
-              <button onClick={e => handleIntervalDelete(interval.id)}>x</button>
-              <span className="accel-table-interval-altspeed">{interval.min_speed !== accelSpeed.min ? Math.round(interval.min_speed * accelSpeed.speed_ratio) : data.accel_min_rpm} - {interval.max_speed !== accelSpeed.max ? Math.round(interval.max_speed * accelSpeed.speed_ratio) : data.accel_max_rpm} RPM</span>
-              <input type="number" min="0" max="100" step="0.01" value={interval.time} onChange={e => handleIntervalData(e, interval.id, "time")}/>
-              <span className="accel-table-interval-unit">s</span>
+            <div key={interval.id} className="accel-table-interval">
+              <div className="accel-table-interval-container">
+                <input type="number" min={accelSpeed.min} max={accelSpeed.max} step="0.1" value={interval.min_speed} onChange={e => handleIntervalData(e, interval.id, "min")}/>
+                <span> - </span>
+                <input type="number" min={accelSpeed.min} max={accelSpeed.max} step="0.1" value={interval.max_speed} onChange={e => handleIntervalData(e, interval.id, "max")}/>
+                <span className="accel-table-interval-unit">km/h</span>
+                <button onClick={e => handleIntervalDelete(interval.id)}>x</button>
+                <span className="accel-table-interval-altspeed">{interval.min_speed !== accelSpeed.min ? Math.round(interval.min_speed * accelSpeed.speed_ratio) : data.accel_min_rpm} - {interval.max_speed !== accelSpeed.max ? Math.round(interval.max_speed * accelSpeed.speed_ratio) : data.accel_max_rpm} RPM</span>
+                <input type="number" min="0" max="100" step="0.01" value={interval.time} onChange={e => handleIntervalData(e, interval.id, "time")}/>
+                <span className="accel-table-interval-unit">s</span>
+              </div>
+              <div className="accel-table-spacer"></div>
             </div>
-            <div className="accel-table-spacer"></div>
-            </>
           )
         })}
         <button onClick={handleIntervalCreate}>Dodaj kolejny przedział</button>

@@ -391,11 +391,11 @@
   padding: .5rem;
 }
 
-.accel-table-interval-container:first-child {
+.accel-table-interval:first-child .accel-table-interval-container {
   padding-top: .2rem;
 }
 
-.accel-table-interval-container:first-child button {
+.accel-table-interval:first-child button {
   display: none;
 }
 
@@ -412,6 +412,10 @@ span.accel-table-interval-unit {
 
 .results-container {
   color: #fff;
+}
+
+.results-container h1 {
+  font-size: 1.9rem;
 }
 
 .login-switch-container {
