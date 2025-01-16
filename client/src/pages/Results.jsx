@@ -33,9 +33,9 @@ function Results() {
     if (state !== null) {
       switch (state.option) {
         case 'powerGraph':
-          let rpmArray = [];
-          let torqueArray = [];
-          let horsepowerArray = [];
+          let graphRpmArray = [];
+          let graphTorqueArray = [];
+          let graphHorsepowerArray = [];
           let graphData = [];
 
           const powerGraphVaporPressureOfWater = 0.61121 * Math.exp((18.678 - (state.air_temperature / 234.5)) * (state.air_temperature / (257.14 + state.air_temperature)));
@@ -58,7 +58,7 @@ function Results() {
             const avgRollingResistance = state.car_weight * 9.80665 * avgRollingResistanceCoefficient;
 
             const overallForce = force + avgAirResistance + avgRollingResistance;
-            const wheelRadius = (((state.tyre_ratio / 100) * state.tyre_width) + (state.tyre_diameter * 12,7)) / 1000;
+            const wheelRadius = (((state.tyre_ratio / 100) * state.tyre_width) + (state.tyre_diameter * 12.7)) / 1000;
             const wheelTorque = overallForce * wheelRadius;
             const engineTorque = (wheelTorque * 1.141) / (state[`gear_${state.accel_gear}`] * state.final_drive);
 
@@ -68,9 +68,9 @@ function Results() {
 
             const engineHorsepower = (engineTorque * avgEngineRPM) / 7023.49537;
 
-            rpmArray.push(Math.round(avgEngineRPM));
-            torqueArray.push(Math.round((engineTorque + Number.EPSILON) * 100) / 100);
-            horsepowerArray.push(Math.round((engineHorsepower + Number.EPSILON) * 100) / 100);
+            graphRpmArray.push(Math.round(avgEngineRPM));
+            graphTorqueArray.push(Math.round((engineTorque + Number.EPSILON) * 100) / 100);
+            graphHorsepowerArray.push(Math.round((engineHorsepower + Number.EPSILON) * 100) / 100);
 
             graphData.push(
               {
@@ -82,13 +82,13 @@ function Results() {
             );
           }
           setChartData(prevState => {
-            prevState.labels = rpmArray;
-            prevState.datasets[0].data = torqueArray;
+            prevState.labels = graphRpmArray;
+            prevState.datasets[0].data = graphTorqueArray;
             prevState.datasets[0].label = 'Moment obrotowy';
             prevState.datasets.push(
               {
                 label: 'Moc',
-                data: horsepowerArray
+                data: graphHorsepowerArray
               }
             );
             return {
@@ -101,6 +101,102 @@ function Results() {
           });
           break;
         case 'accel':
+          let accelRpmArray = [];
+          let accelTorqueArray = [];
+          let accelHorsepowerArray = [];
+          let accelTimes = [];
+          let accelData = [];
+          let accelGears = [];
+          let accelEngineRPM, accelEngineTorque, accelLowerRPMInterval, accelHigherRPMInterval, accelWheelTorque, accelRollingResistanceCoefficient, accelRollingResistance, accelAirResistance, acceleration, accelTime;
+
+          const accelVaporPressureOfWater = 0.61121 * Math.exp((18.678 - (state.air_temperature / 234.5)) * (state.air_temperature / (257.14 + state.air_temperature)));
+          const accelMassFractionOfWater = (state.air_humidity / 100) * ((accelVaporPressureOfWater * 10) / state.air_pressure);
+          const accelMolarMassOfMoistAir = ((1 - accelMassFractionOfWater) * 28.966) + (accelMassFractionOfWater * 18.015);
+          const accelAirDensity = ((state.air_pressure * 100) * accelMolarMassOfMoistAir) / (8314.3 * (state.air_temperature + 273.15));
+
+          const accelWheelRadius = (((state.tyre_ratio / 100) * state.tyre_width) + (state.tyre_diameter * 12.7)) / 1000;
+
+          for (let i = 1; i <= state.number_of_gears; i++ ) {
+            const maxSpeed = (state.torque_intervals[state.torque_intervals.length - 1].rpm / (state[`gear_${i}`] * state.final_drive)) * 60 * (state.wheel_circumference / 100000);
+            accelGears.push(
+              {
+                gear: i,
+                ratio: state[`gear_${i}`],
+                maxSpeed: maxSpeed
+              }
+            );
+          }
+          console.log(accelGears)
+
+          for (let speed = 1; speed <= 100; speed++) {
+            accelRollingResistanceCoefficient = (((((speed / 100) * (speed / 100)) * 0.0095) + 0.01) * (1 / state.tyre_pressure)) + 0.005;
+            accelRollingResistance = state.car_weight * 9.80665 * accelRollingResistanceCoefficient;
+
+            accelAirResistance = 0.5 * accelAirDensity * ((speed / 3.6) * (speed / 3.6)) * state.drag_coefficient * state.frontal_area;
+
+            accelGears.forEach(gear => {
+              if (gear.gear === 1 && speed <= accelGears[0].maxSpeed) {
+                accelEngineRPM = ((speed * 100000) / (60 * state.wheel_circumference)) * gear.ratio * state.final_drive;
+                if (accelEngineRPM < state.torque_intervals[0].rpm) {
+                  accelEngineTorque = state.torque_intervals[0].torque * (accelEngineRPM / state.torque_intervals[0].rpm);
+                }
+                else {
+                  state.torque_intervals.forEach(interval => {
+                    if (interval.rpm < accelEngineRPM) {
+                      accelLowerRPMInterval = interval;
+                      accelHigherRPMInterval = state.torque_intervals[interval.id + 1];
+                    }
+                  });
+                  accelEngineTorque = ((accelHigherRPMInterval.torque - accelLowerRPMInterval.torque) * ((accelEngineRPM - accelLowerRPMInterval.rpm) / (accelHigherRPMInterval.rpm - accelLowerRPMInterval.rpm))) + accelLowerRPMInterval.torque;
+                }
+                accelWheelTorque = accelEngineTorque * gear.ratio * state.final_drive * 0.87642;
+                acceleration = (((accelWheelTorque / accelWheelRadius) - accelRollingResistance) - accelAirResistance) / state.car_weight;
+                accelTime = 1 / (3.6 * acceleration);
+                accelTimes.push(accelTime);
+                
+                // console.log(accelTime);
+                console.log("gear", gear.gear, "speed", speed, "engineRPM", accelEngineRPM, "rollResistance", accelRollingResistance, "airResistance", accelAirResistance, "acceleration", acceleration, "accelTime", accelTime, "accelWheelTorque", accelWheelTorque);
+              }
+              else if (gear.gear !== 1 && speed > accelGears[gear.gear - 2].maxSpeed && speed <= gear.maxSpeed) {
+                accelEngineRPM = ((speed * 100000) / (60 * state.wheel_circumference)) * gear.ratio * state.final_drive;
+                if (accelEngineRPM < state.torque_intervals[0].rpm) {
+                  accelEngineTorque = state.torque_intervals[0].torque * (accelEngineRPM / state.torque_intervals[0].rpm);
+                }
+                else {
+                  state.torque_intervals.forEach(interval => {
+                    if (interval.rpm < accelEngineRPM) {
+                      accelLowerRPMInterval = interval;
+                      accelHigherRPMInterval = state.torque_intervals[interval.id + 1];
+                    }
+                  });
+                  accelEngineTorque = ((accelHigherRPMInterval.torque - accelLowerRPMInterval.torque) * ((accelEngineRPM - accelLowerRPMInterval.rpm) / (accelHigherRPMInterval.rpm - accelLowerRPMInterval.rpm))) + accelLowerRPMInterval.torque;
+                }
+                accelWheelTorque = accelEngineTorque * gear.ratio * state.final_drive * 0.87642;
+                acceleration = (((accelWheelTorque / accelWheelRadius) - accelRollingResistance) - accelAirResistance) / state.car_weight;
+                if (speed - 1 === Math.floor(accelGears[gear.gear - 2].maxSpeed)) {
+                  accelTime = (1 / (3.6 * acceleration)) + state.gear_change_time;
+                }
+                else {
+                  accelTime = 1 / (3.6 * acceleration);
+                }
+                accelTimes.push(accelTime);
+
+                // console.log(accelTime);
+                console.log("gear", gear.gear, "speed", speed, "engineRPM", accelEngineRPM, "rollResistance", accelRollingResistance, "airResistance", accelAirResistance, "acceleration", acceleration, "accelTime", accelTime, "accelWheelTorque", accelWheelTorque);
+              }
+            });
+          }
+          console.log(accelWheelRadius)
+
+          const accelerationTime = accelTimes.reduce((acc, val) => {
+            return acc + val;
+          }, 0);
+
+          setResult({
+            type: 'accel',
+            accel: accelerationTime
+            // vmax:
+          });
           break;
         case 'aero':
           const aeroSpeed = state.step_4_option === 'aero_set_speed_value' ? state.set_speed : 120;
@@ -228,6 +324,9 @@ function Results() {
         <h3 className="result-heading">Przy prędkości {result.speed} km/h opór toczenia wynosi: {Math.round((result.value + Number.EPSILON) * 100) / 100} N</h3>
       ) : ''}
       {result.type === 'powerGraph' ? result.graph_data.map(element => <h3 key={element.id} className="results-graph-data">{element.rpm} RPM: {element.torque} Nm, {element.horsepower} KM</h3>) : ''}
+      {result.type === 'accel' ? (
+        <h3 className="result-heading">Dla podanych wartości momentu obrotowego przyspieszenie od 0 do 100 km/h wynosi: {Math.round((result.accel + Number.EPSILON) * 100) / 100} s</h3>
+      ) : ''}
     </div>
   );
 }

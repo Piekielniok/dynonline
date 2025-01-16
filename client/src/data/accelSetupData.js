@@ -1,9 +1,9 @@
-const powerGraphSetupData = [
+const accelSetupData = [
   {
     id: 1,
     step: 2,
     type: "",
-    title: "Opcja ta pozwala wygenerować wykres mocy i momentu obrotowego bez użycia hamowni. Wymagany będzie jednak pomiar przyspieszenia zgodnie z podanymi wytycznymi.",
+    title: "Opcja ta pozwala obliczyć przyspieszenie samochodu od 0 do 100 km/h. Do obliczeń wymagane będą wartości z wykresu z hamowni, który znaleźć można także w sieci.",
     data: []
   },
   {
@@ -173,17 +173,31 @@ const powerGraphSetupData = [
   {
     id: 6,
     step: 7,
-    type: "accel_table",
-    title: "Pora na wprowadzenie danych dotyczących przyspieszenia",
+    type: "torque_table",
+    title: "Pora na wprowadzenie danych z wykresu z hamowni",
     data: []
-  }
-  // {
-  //   id: 7,
-  //   step: 8,
-  //   type: "",
-  //   title: "Już prawie koniec. Ta strona zawiera modyfikatory, których nie musisz zmieniać jeśli nie jesteś pewien.",
-  //   data: []
-  // },
+  },
+  {
+    id: 7,
+    step: 8,
+    type: "",
+    title: "Już prawie koniec. Ta strona zawiera modyfikatory, których nie musisz zmieniać jeśli nie jesteś pewien.",
+    data: [
+      {
+        id: 1,
+        type: "value",
+        min: 0,
+        max: 20,
+        step: 0.01,
+        default: 0.8,
+        unit: "s",
+        name: "gear_change_time",
+        fullName: "Czas zmiany biegów",
+        description: "",
+        altOption: false
+      }
+    ]
+  },
 ];
 
-export default powerGraphSetupData;
+export default accelSetupData;

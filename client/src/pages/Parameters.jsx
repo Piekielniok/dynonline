@@ -4,6 +4,7 @@ import ListSelect from '../components/ListSelect';
 import Value from '../components/Value';
 import GearsTable from '../components/GearsTable';
 import AccelTable from '../components/AccelTable';
+import TorqueTable from '../components/TorqueTable';
 import { firstStepList } from '../data/universalSetupData';
 
 function Parameters() {
@@ -75,6 +76,10 @@ function Parameters() {
         break;
       case "accel_table":
         setItemsList([<AccelTable key={step.id} data={parametersData} setData={handleParametersAccelData} />]);
+        break;
+      case "torque_table":
+        setItemsList([<TorqueTable key={step.id} data={parametersData} setData={handleParametersAccelData} />]);
+        break;
     }
   };
 
@@ -91,6 +96,13 @@ function Parameters() {
           });
           break;
         case 2:
+          import("../data/accelSetupData").then(data => {
+            setSelectedOptionData(data.default);
+            setSetupSteps(data.default[0].step);
+            setSetupTitle(data.default[0].title);
+            setParametersData({ option: "accel" });
+            handleItemsData(data.default[0]);
+          });
           break;
         case 3:
           import("../data/aeroSetupData").then(data => {

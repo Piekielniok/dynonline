@@ -23,7 +23,6 @@ function AccelTable(props) {
     max: 0,
     speed_ratio: 0
   });
-  const [intervals, setIntervals] = useState();
 
   const handleIntervalData = (e, id, dataType) => {
     setData(prevState => {
@@ -121,7 +120,7 @@ function AccelTable(props) {
   return (
     <div className="accel-table-container">
       <div className="accel-table-top-container">
-        <span>Podaj bieg, na którym wykonany zostanie pomiar</span>
+        <span>Bieg, na którym wykonany zostanie pomiar</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
 
@@ -141,7 +140,7 @@ function AccelTable(props) {
         <input type="number" min={data.accel_min_rpm} max="10000" step="100" value={data.accel_max_rpm} onChange={e => setData(prevState => { return {...prevState, [`accel_max_rpm`]: e.target.value > data.accel_min_rpm ? e.target.value : data.accel_min_rpm}}) }/>
       </div>
       <div className="accel-table-top-container">
-        <span>Dla podanych parametrów, zakres prędkości pomiaru wynosi</span>
+        <span>Zakres prędkości pomiaru wynosi</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
           W zakresie prędkości uwzględniony jest większy zakres obrotów silnika, aby obliczając wartości średnie z podanych przedziałów, wykres przedstawiał odpowiedni zakres.
