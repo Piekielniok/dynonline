@@ -14,9 +14,6 @@ app.post('/results/save', async (req, res) => {
 
 app.post('/results/checkurl', async (req, res) => {
   const id = await checkUrl('sda53fsa');
-  console.log(id);
-  console.log(req.body);
-  res.send('ayo');
 })
 
 app.get('/results/:id', async (req, res) => {

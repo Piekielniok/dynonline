@@ -75,12 +75,9 @@ function AccelTable(props) {
   const handleIntervalDelete = (id) => {
     setData(prevState => {
       const index = prevState.accel_intervals.findIndex(interval => interval.id === id);
-      console.log(id);
-      console.log(index);
       if (index > -1) {
         prevState.accel_intervals.splice(index, 1);
       }
-      console.log(prevState.accel_intervals);
       return {
         ...prevState
       }

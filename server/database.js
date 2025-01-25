@@ -17,7 +17,6 @@ export async function saveResult(type, data) {
   const url = nanoid(8);
   const url_id = await checkUrl(url);
   if (url_id === undefined) {
-    // console.log(type, data);
     const [result] = await pool.query(`INSERT INTO results (url, type, data) VALUES (?, ?, ?)`, [url, type, JSON.stringify(data)]);
     const id = result.insertId;
     if (id !== 0) {

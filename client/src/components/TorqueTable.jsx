@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import infoModalIcon from '../assets/infoModalIcon.svg';
 
 function TorqueTable(props) {
-  const [gears, setGears] = useState(props.data.number_of_gears);
   const [data, setData] = useState({
     wheel_circumference: 0,
     torque_interval_method: "table",
@@ -13,11 +12,6 @@ function TorqueTable(props) {
         rpm: 1500
       }
     ]
-  });
-  const [accelSpeed, setAccelSpeed] = useState({
-    min: 0,
-    max: 0,
-    speed_ratio: 0
   });
 
   const handleIntervalData = (e, id, dataType) => {
@@ -85,20 +79,6 @@ function TorqueTable(props) {
   }, []);
 
   useEffect(() => {
-    // const rawMinSpeed = ((((data.accel_min_rpm / (props.data[`gear_${data.accel_gear}`] * props.data.final_drive)) * data.wheel_circumference) * 60) / 100000);
-    // const rawMaxSpeed = ((((data.accel_max_rpm / (props.data[`gear_${data.accel_gear}`] * props.data.final_drive)) * data.wheel_circumference) * 60) / 100000);
-    // const minSpeed = Math.round((rawMinSpeed + Number.EPSILON) * 10) / 10;
-    // const maxSpeed = Math.round((rawMaxSpeed + Number.EPSILON) * 10) / 10;
-    // const speedRatio = data.accel_min_rpm / rawMinSpeed;
-    // setAccelSpeed(prevState => {
-    //   return {
-    //     ...prevState,
-    //     min: minSpeed,
-    //     max: maxSpeed,
-    //     speed_ratio: speedRatio
-    //   }
-    // });
-
     if (Object.keys(data).length !== 0) {
       props.setData(data);
     }

@@ -132,8 +132,6 @@ function Parameters() {
         handleItemsData(selectedOptionData[prevStepDataIndex + 1]);
       }
       else if (prevStepDataIndex === selectedOptionData.length - 1) {
-        //przejdz do wyliczen
-        // console.log("koniec");
         navigate('/wynik', { state: parametersData });
 
       }
@@ -141,19 +139,15 @@ function Parameters() {
         setSetupSteps(selectedOptionData[0].step);
       }
     }
-
-    // selectedOptionData.forEach(el => {
-    //   setSetupSteps()
-    // });
   };
 
   const handleSetupOption = (stepID, item) => {
     setSetupOption(item.id);
   }
 
-  useEffect(() => {
-    console.log(parametersData);
-  }, [parametersData]);
+  // useEffect(() => {
+  //   console.log(parametersData);
+  // }, [parametersData]);
 
   return (
     <>

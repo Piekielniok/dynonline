@@ -16,7 +16,6 @@ function Results() {
   });
   let value;
   let listGraphData = [];
-  console.log(state);
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -88,7 +87,6 @@ function Results() {
             const avgEngineRPM = minEngineRPM + ((maxEngineRPM - minEngineRPM) / 2);
 
             const engineHorsepower = (engineTorque * avgEngineRPM) / 7023.49570;
-            console.log(velocityDelta, graphAcceleration, force);
 
             graphRpmArray.push(Math.round(avgEngineRPM));
             graphTorqueArray.push(Math.round((engineTorque + Number.EPSILON) * 100) / 100);
@@ -124,17 +122,28 @@ function Results() {
               ...prevState
             }
           });
+
           setResult({
             type: 'powerGraph',
             graph_data: graphData
           });
+          axios
+            .post('http://localhost:8080/results/save', {
+              type: 'powerGraph',
+              data: {
+                type: 'powerGraph',
+                graph_data: graphData
+              }
+            })
+            .then(res => navigate(`/wynik/${res.data}`))
+            .catch(err => console.log(err));
           break;
         case 'accel':
-          let accelRpmArray = [];
-          let accelTorqueArray = [];
-          let accelHorsepowerArray = [];
+          // let accelRpmArray = [];
+          // let accelTorqueArray = [];
+          // let accelHorsepowerArray = [];
           let accelTimes = [];
-          let accelData = [];
+          // let accelData = [];
           let accelGears = [];
           let accelEngineRPM, accelEngineTorque, accelLowerRPMInterval, accelHigherRPMInterval, accelWheelTorque, accelRollingResistanceCoefficient, accelRollingResistance, accelAirResistance, acceleration, accelTime;
 
@@ -155,7 +164,6 @@ function Results() {
               }
             );
           }
-          console.log(accelGears)
 
           for (let speed = 1; speed <= 100; speed++) {
             accelRollingResistanceCoefficient = (((((speed / 100) * (speed / 100)) * 0.0095) + 0.01) * (1 / state.tyre_pressure)) + 0.005;
@@ -182,9 +190,6 @@ function Results() {
                 acceleration = (((accelWheelTorque / accelWheelRadius) - accelRollingResistance) - accelAirResistance) / state.car_weight;
                 accelTime = 1 / (3.6 * acceleration);
                 accelTimes.push(accelTime);
-                
-                // console.log(accelTime);
-                console.log("gear", gear.gear, "speed", speed, "engineRPM", accelEngineRPM, "rollResistance", accelRollingResistance, "airResistance", accelAirResistance, "acceleration", acceleration, "accelTime", accelTime, "accelWheelTorque", accelWheelTorque);
               }
               else if (gear.gear !== 1 && speed > accelGears[gear.gear - 2].maxSpeed && speed <= gear.maxSpeed) {
                 accelEngineRPM = ((speed * 100000) / (60 * state.wheel_circumference)) * gear.ratio * state.final_drive;
@@ -209,13 +214,9 @@ function Results() {
                   accelTime = 1 / (3.6 * acceleration);
                 }
                 accelTimes.push(accelTime);
-
-                // console.log(accelTime);
-                console.log("gear", gear.gear, "speed", speed, "engineRPM", accelEngineRPM, "rollResistance", accelRollingResistance, "airResistance", accelAirResistance, "acceleration", acceleration, "accelTime", accelTime, "accelWheelTorque", accelWheelTorque);
               }
             });
           }
-          console.log(accelWheelRadius)
 
           const accelerationTime = accelTimes.reduce((acc, val) => {
             return acc + val;
@@ -226,6 +227,16 @@ function Results() {
             accel: accelerationTime
             // vmax:
           });
+          axios
+            .post('http://localhost:8080/results/save', {
+              type: 'accel',
+              data: {
+                type: 'accel',
+                accel: accelerationTime
+              }
+            })
+            .then(res => navigate(`/wynik/${res.data}`))
+            .catch(err => console.log(err));
           break;
         case 'aero':
           const aeroSpeed = state.step_4_option === 'aero_set_speed_value' ? state.set_speed : 120;
@@ -233,16 +244,17 @@ function Results() {
           const massFractionOfWater = (state.air_humidity / 100) * ((vaporPressureOfWater * 10) / state.air_pressure);
           const molarMassOfMoistAir = ((1 - massFractionOfWater) * 28.966) + (massFractionOfWater * 18.015);
           const airDensity = ((state.air_pressure * 100) * molarMassOfMoistAir) / (8314.3 * (state.air_temperature + 273.15));
+          let aeroLabelArray = [];
+          let aeroDataArray = [];
+          let aeroData = {};
 
           if (state.step_4_option === 'aero_set_speed_value') {
             value = 0.5 * airDensity * ((aeroSpeed / 3.6) * (aeroSpeed / 3.6)) * state.drag_coefficient * state.frontal_area;
           }
           else {
-            const labelArray = [];
-            const dataArray = [];
             for (let i = state.speed_range_min; i <= state.speed_range_max; i++) {
-              labelArray.push(i);
-              dataArray.push(0.5 * airDensity * ((i / 3.6) * (i / 3.6)) * state.drag_coefficient * state.frontal_area);
+              aeroLabelArray.push(i);
+              aeroDataArray.push(0.5 * airDensity * ((i / 3.6) * (i / 3.6)) * state.drag_coefficient * state.frontal_area);
             }
             setChartOptions(prevState => {
               prevState.scales.x.title.text = "km/h";
@@ -252,46 +264,56 @@ function Results() {
               }
             });
             setChartData(prevState => {
-              prevState.labels = labelArray;
-              prevState.datasets[0].data = dataArray;
+              prevState.labels = aeroLabelArray;
+              prevState.datasets[0].data = aeroDataArray;
               prevState.datasets[0].label = 'Opór powietrza w zależności od prędkości';
               return {
                 ...prevState
               }
             });
           }
-          
-          setResult({
-            type: 'aero',
-            speed_type: state.step_4_option === 'aero_set_speed_value' ? 'set_speed' : 'speed_range',
-            speed: state.step_4_option === 'aero_set_speed_value' ? aeroSpeed : [state.speed_range_min, state.speed_range_max],
-            value: state.step_4_option === 'aero_set_speed_value' ? value : chartData.datasets[0].data
-          });
-          // axios
-          //   .post('http://localhost:8080/results/save', {
-          //     type: 'aero',
-          //     data: {
-          //       result: value,
-          //       speed: aeroSpeed
-          //     }
-          //   })
-          //   .then(res => navigate(`/wynik/${res.data}`))
-          //   .catch(err => console.log(err));
+
+          if (state.step_4_option === 'aero_set_speed_value') {
+            aeroData = {
+              type: 'aero',
+              speed_type: 'set_speed',
+              speed: aeroSpeed,
+              value: value
+            }
+          }
+          else {
+            aeroData = {
+              type: 'aero',
+              speed_type: 'speed_range',
+              speed_array: aeroLabelArray,
+              value_array: aeroDataArray
+            }
+          }
+
+          setResult(aeroData);
+          axios
+            .post('http://localhost:8080/results/save', {
+              type: 'aero',
+              data: aeroData
+            })
+            .then(res => navigate(`/wynik/${res.data}`))
+            .catch(err => console.log(err));
           break;
         case 'roll':
           const rollSpeed = state.step_4_option === 'roll_set_speed_value' ? state.set_speed : 120;
+          let rollLabelArray = [];
+          let rollDataArray = [];
+          let rollData = {};
 
           if (state.step_4_option === 'roll_set_speed_value') {
             const rollingResistanceCoefficient = (((((rollSpeed / 100) * (rollSpeed / 100)) * 0.0095) + 0.01) * (1 / state.tyre_pressure)) + 0.005;
             value = state.car_weight * 9.80665 * rollingResistanceCoefficient;
           }
           else {
-            const labelArray = [];
-            const dataArray = [];
             for (let i = state.speed_range_min; i <= state.speed_range_max; i++) {
-              labelArray.push(i);
+              rollLabelArray.push(i);
               const rollingResistanceCoefficient = (((((i / 100) * (i / 100)) * 0.0095) + 0.01) * (1 / state.tyre_pressure)) + 0.005;
-              dataArray.push(state.car_weight * 9.80665 * rollingResistanceCoefficient);
+              rollDataArray.push(state.car_weight * 9.80665 * rollingResistanceCoefficient);
             }
             setChartOptions(prevState => {
               prevState.scales.x.title.text = "km/h";
@@ -301,8 +323,8 @@ function Results() {
               }
             });
             setChartData(prevState => {
-              prevState.labels = labelArray;
-              prevState.datasets[0].data = dataArray;
+              prevState.labels = rollLabelArray;
+              prevState.datasets[0].data = rollDataArray;
               prevState.datasets[0].label = 'Opór toczenia w zależności od prędkości';
               return {
                 ...prevState
@@ -310,22 +332,31 @@ function Results() {
             });
           }
 
-          setResult({
-            type: 'roll',
-            speed_type: state.step_4_option === 'roll_set_speed_value' ? 'set_speed' : 'speed_range',
-            speed: state.step_4_option === 'roll_set_speed_value' ? rollSpeed : [state.speed_range_min, state.speed_range_max],
-            value: state.step_4_option === 'roll_set_speed_value' ? value : chartData.datasets[0].data
-          });
-          // axios
-          //   .post('http://localhost:8080/results/save', {
-          //     type: 'aero',
-          //     data: {
-          //       result: value,
-          //       speed: aeroSpeed
-          //     }
-          //   })
-          //   .then(res => navigate(`/wynik/${res.data}`))
-          //   .catch(err => console.log(err));
+          if (state.step_4_option === 'roll_set_speed_value') {
+            rollData = {
+              type: 'roll',
+              speed_type: 'set_speed',
+              speed: rollSpeed,
+              value: value
+            }
+          }
+          else {
+            rollData = {
+              type: 'roll',
+              speed_type: 'speed_range',
+              speed_array: rollLabelArray,
+              value_array: rollDataArray
+            }
+          }
+
+          setResult(rollData);
+          axios
+            .post('http://localhost:8080/results/save', {
+              type: 'roll',
+              data: rollData
+            })
+            .then(res => navigate(`/wynik/${res.data}`))
+            .catch(err => console.log(err));
           break;
         case 'all':
           break;
@@ -337,11 +368,121 @@ function Results() {
           .get(`http://localhost:8080/results/${id}`)
           .then(res => {
             const obj = JSON.parse(res.data.data);
-            setResult({
-              type: res.data.type,
-              value: obj.result,
-              speed: obj.speed
-            });
+            switch (res.data.type) {
+              case 'powerGraph':
+                let graphRpmArray = [];
+                let graphTorqueArray = [];
+                let graphHorsepowerArray = [];
+
+                obj.graph_data.forEach(element => {
+                  graphRpmArray.push(element.rpm);
+                  graphTorqueArray.push(element.torque);
+                  graphHorsepowerArray.push(element.horsepower);
+                });
+
+                setChartOptions(prevState => {
+                  prevState.scales.x.title.text = "RPM";
+                  prevState.scales.y.title.text = "Nm, KM";
+                  return {
+                    ...prevState
+                  }
+                });
+                setChartData(prevState => {
+                  prevState.labels = graphRpmArray;
+                  prevState.datasets[0].data = graphTorqueArray;
+                  prevState.datasets[0].label = 'Moment obrotowy';
+                  prevState.datasets.push(
+                    {
+                      label: 'Moc',
+                      data: graphHorsepowerArray
+                    }
+                  );
+                  return {
+                    ...prevState
+                  }
+                });
+
+                setResult({
+                  type: 'powerGraph',
+                  graph_data: obj.graph_data
+                });
+                break;
+              case 'accel':
+                setResult({
+                  type: 'accel',
+                  accel: obj.accel
+                });
+                break;
+              case 'aero':
+                if (obj.speed_type === 'set_speed') {
+                  setResult({
+                    type: 'aero',
+                    speed_type: 'set_speed',
+                    speed: obj.speed,
+                    value: obj.value
+                  });
+                }
+                else {
+                  setChartOptions(prevState => {
+                    prevState.scales.x.title.text = "km/h";
+                    prevState.scales.y.title.text = "N";
+                    return {
+                      ...prevState
+                    }
+                  });
+                  setChartData(prevState => {
+                    prevState.labels = obj.speed_array;
+                    prevState.datasets[0].data = obj.value_array;
+                    prevState.datasets[0].label = 'Opór powietrza w zależności od prędkości';
+                    return {
+                      ...prevState
+                    }
+                  });
+
+                  setResult({
+                    type: 'aero',
+                    speed_type: 'speed_range',
+                    speed_array: obj.speed_array,
+                    value_array: obj.value_array
+                  });
+                }
+                break;
+              case 'roll':
+                if (obj.speed_type === 'set_speed') {
+                  setResult({
+                    type: 'roll',
+                    speed_type: 'set_speed',
+                    speed: obj.speed,
+                    value: obj.value
+                  });
+                }
+                else {
+                  setChartOptions(prevState => {
+                    prevState.scales.x.title.text = "km/h";
+                    prevState.scales.y.title.text = "N";
+                    return {
+                      ...prevState
+                    }
+                  });
+                  setChartData(prevState => {
+                    prevState.labels = obj.speed_array;
+                    prevState.datasets[0].data = obj.value_array;
+                    prevState.datasets[0].label = 'Opór toczenia w zależności od prędkości';
+                    return {
+                      ...prevState
+                    }
+                  });
+
+                  setResult({
+                    type: 'roll',
+                    speed_type: 'speed_range',
+                    speed_array: obj.speed_array,
+                    value_array: obj.value_array
+                  });
+                }
+                break;
+            }
+            
           })
           .catch(() => navigate('/'));
       }
