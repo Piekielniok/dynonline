@@ -3,7 +3,7 @@ const aeroSetupData = [
     id: 1,
     step: 2,
     type: "",
-    title: "Przy użyciu tej opcji uzyskasz w zależności od wyboru wartość lub wykres oporu powietrza czyli siły, która wyrażona jest w Newtonach.",
+    title: "Przy użyciu tej opcji uzyskasz w zależności od wyboru wartość lub wykres oporu powietrza czyli siły, która wyrażona jest w niutonach.",
     data: []
   },
   {
@@ -22,7 +22,7 @@ const aeroSetupData = [
         unit: "",
         name: "drag_coefficient",
         fullName: "Współczynnik oporu powietrza",
-        description: "Jest to wartość która określa jak bardzo aerodynamiczny jest samochód",
+        description: "Jest to bezwymiarowa wartość zależna od kształu pojazdu, która określa jak bardzo aerodynamiczny jest pojazd.",
         altOption: false
       },
       {
@@ -35,7 +35,7 @@ const aeroSetupData = [
         unit: "m²",
         name: "frontal_area",
         fullName: "Powierzchnia czołowa",
-        description: "Jest to powierzchnia jaką ma samochód patrząc od jego przodu. Jeśli nie znasz tej wartości możesz wprowadzić szerokość i wysokość pojazdu żeby otrzymać orientacyjną wartość",
+        description: "Jest to powierzchnia jaką ma samochód patrząc od jego przodu. Jeśli nie znasz tej wartości możesz wprowadzić szerokość i wysokość pojazdu żeby otrzymać orientacyjną wartość.",
         altOption: true,
         altOptionType: "checkbox",
         altOptionTitle: "Nie znam tej wartości",
@@ -59,7 +59,7 @@ const aeroSetupData = [
         unit: "°C",
         name: "air_temperature",
         fullName: "Temperatura powietrza",
-        description: "Jest to temperatura",
+        description: "Należy wprowadzić temperaturę otoczenia w momencie wykonywania pomiaru.",
         altOption: false
       },
       {
@@ -72,7 +72,7 @@ const aeroSetupData = [
         unit: "hPa",
         name: "air_pressure",
         fullName: "Ciśnienie powietrza",
-        description: "Jest to ciśnienie",
+        description: "Należy wprowadzić ciśnienie powietrza w momencie wykonywania pomiaru.",
         altOption: false
       },
       {
@@ -85,7 +85,7 @@ const aeroSetupData = [
         unit: "%",
         name: "air_humidity",
         fullName: "Wilgotność powietrza",
-        description: "Jest to wilgotność którą odczuwamy",
+        description: "Jest to wilgotność względna powietrza wyrażana w procentach, która była w momencie wykonywania pomiaru.",
         altOption: false
       }
     ]
@@ -100,6 +100,7 @@ const aeroSetupData = [
         id: 1,
         name: "aero_speed_range_graph",
         fullName: "Dla zakresu prędkości",
+        description: "Wprowadź zakres dla którego ma zostać wygenerowany wykres zależności oporu od prędkości pojazdu.",
         altOption: true,
         altOptionType: "",
         altOptionTitle: "",
@@ -109,6 +110,7 @@ const aeroSetupData = [
         id: 2,
         name: "aero_set_speed_value",
         fullName: "Dla określonej prędkości",
+        description: "Wprowadź dokładną wartość przy której ma być obliczony opór.",
         altOption: true,
         altOptionType: "",
         altOptionTitle: "",

@@ -123,7 +123,7 @@ function AccelTable(props) {
         <span>Bieg, na którym wykonany zostanie pomiar</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
-
+          Podanie tej wartości jest wymagane do wykonania obliczeń.
         </div>
       </div>
       <input type="number" min="1" max={gears} step="1" value={data.accel_gear} onChange={e => setData(prevState => { return {...prevState, [`accel_gear`]: e.target.value <= gears ? e.target.value : gears}}) }/> 
@@ -131,7 +131,7 @@ function AccelTable(props) {
         <span>Zakres prędkości obrotowej silnika</span>
         <img src={infoModalIcon} className="accel-table-info" onClick={e => e.target.classList.contains('opened') ? e.target.classList.remove('opened') : e.target.classList.add('opened')} />
         <div className="accel-table-modal">
-
+          Jest to zakres obrotów silnika, przy którym wykonywany będzie pomiar. Należy odnotować przy przyspieszaniu ile czasu pojazd potrzebował na zwiększenie prędkości o stałą wartość obrotów.
         </div>
       </div>
       <div className="accel-table-element-container">

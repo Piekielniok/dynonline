@@ -12,10 +12,10 @@ function Value(props) {
       case 'car_width_and_height':
         component = (
           <div className='value-alt-options'>
-            <span className='value-alt-title'>Szerokość</span>
+            <span className='value-alt-title'>Szerokość pojazdu</span>
             <input type="number" min="0" max="2.6" step="0.01" value={altData.car_width || ''} placeholder='1.7' onChange={e => handleAltDataChange("car_width", e.target.value)}></input>
             <span className='value-unit'>m</span>
-            <span className='value-alt-title'>Wysokość</span>
+            <span className='value-alt-title'>Wysokość pojazdu</span>
             <input type="number" min="0" max="4" step="0.01" value={altData.car_height || ''} placeholder='1.4' onChange={e => handleAltDataChange("car_height", e.target.value)}></input>
             <span className='value-unit'>m</span>
           </div>

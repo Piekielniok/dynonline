@@ -35,7 +35,7 @@ const accelSetupData = [
         unit: "",
         name: "drag_coefficient",
         fullName: "Współczynnik oporu powietrza",
-        description: "Jest to wartość która określa jak bardzo aerodynamiczny jest samochód",
+        description: "Jest to bezwymiarowa wartość zależna od kształu pojazdu, która określa jak bardzo aerodynamiczny jest pojazd.",
         altOption: false
       },
       {
@@ -48,7 +48,7 @@ const accelSetupData = [
         unit: "m²",
         name: "frontal_area",
         fullName: "Powierzchnia czołowa",
-        description: "Jest to powierzchnia jaką ma samochód patrząc od jego przodu. Jeśli nie znasz tej wartości możesz wprowadzić szerokość i wysokość pojazdu żeby otrzymać orientacyjną wartość",
+        description: "Jest to powierzchnia jaką ma samochód patrząc od jego przodu. Jeśli nie znasz tej wartości możesz wprowadzić szerokość i wysokość pojazdu żeby otrzymać orientacyjną wartość.",
         altOption: true,
         altOptionType: "checkbox",
         altOptionTitle: "Nie znam tej wartości",
@@ -72,7 +72,7 @@ const accelSetupData = [
         unit: "mm",
         name: "tyre_width",
         fullName: "Szerokość opony",
-        description: "",
+        description: "Jest to parametr wyrażony w milimetrach, który określa dystans pomiędzy ściankami boczynmi opony.",
         altOption: false
       },
       {
@@ -85,7 +85,7 @@ const accelSetupData = [
         unit: "",
         name: "tyre_ratio",
         fullName: "Profil opony",
-        description: "",
+        description: "Jest to wysokość ściany bocznej wyrażonej jako stosunek wysokości boku do szerokości opony. Wartość ta podawana jest w procentach.",
         altOption: false
       },
       {
@@ -98,7 +98,7 @@ const accelSetupData = [
         unit: "\"",
         name: "tyre_diameter",
         fullName: "Średnica felgi",
-        description: "",
+        description: "Jest to zewnętrzna średnica felgi wyrażana w calach.",
         altOption: false
       },
       {
@@ -110,8 +110,8 @@ const accelSetupData = [
         default: 2.5,
         unit: "bar",
         name: "tyre_pressure",
-        fullName: "Ciśnienie opon",
-        description: "",
+        fullName: "Ciśnienie w oponach",
+        description: "Jest to wartość ciśnienia manometrycznego w oponach. Należy wprowadzić uśrednioną wartość ze wszystkich opon w pojeździe.",
         altOption: false
       }
     ]
@@ -139,7 +139,7 @@ const accelSetupData = [
         unit: "°C",
         name: "air_temperature",
         fullName: "Temperatura powietrza",
-        description: "Jest to temperatura",
+        description: "Należy wprowadzić temperaturę otoczenia w momencie wykonywania pomiaru.",
         altOption: false
       },
       {
@@ -152,7 +152,7 @@ const accelSetupData = [
         unit: "hPa",
         name: "air_pressure",
         fullName: "Ciśnienie powietrza",
-        description: "Jest to ciśnienie",
+        description: "Należy wprowadzić ciśnienie powietrza w momencie wykonywania pomiaru.",
         altOption: false
       },
       {
@@ -165,7 +165,7 @@ const accelSetupData = [
         unit: "%",
         name: "air_humidity",
         fullName: "Wilgotność powietrza",
-        description: "Jest to wilgotność którą odczuwamy",
+        description: "Jest to wilgotność względna powietrza wyrażana w procentach, która była w momencie wykonywania pomiaru.",
         altOption: false
       }
     ]
@@ -181,7 +181,7 @@ const accelSetupData = [
     id: 7,
     step: 8,
     type: "",
-    title: "Już prawie koniec. Ta strona zawiera modyfikatory, których nie musisz zmieniać jeśli nie jesteś pewien.",
+    title: "Już prawie koniec. Ta strona zawiera modyfikatory, których nie musisz zmieniać jeśli nie znasz ich wartości.",
     data: [
       {
         id: 1,
@@ -193,7 +193,7 @@ const accelSetupData = [
         unit: "s",
         name: "gear_change_time",
         fullName: "Czas zmiany biegów",
-        description: "",
+        description: "Jest to czas spędzony przy każdej zmianie biegów.",
         altOption: false
       }
     ]

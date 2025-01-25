@@ -3,7 +3,7 @@ const aeroSetupData = [
     id: 1,
     step: 2,
     type: "",
-    title: "Użycie tej opcji pozwoli uzyskać w zależności od wyboru wartość lub wykres oporu toczenia, czyli siły wyrażonej w Newtonach.",
+    title: "Użycie tej opcji pozwoli uzyskać w zależności od wyboru wartość lub wykres oporu toczenia, czyli siły wyrażonej w niutonach.",
     data: []
   },
   {
@@ -42,8 +42,8 @@ const aeroSetupData = [
         default: 2.5,
         unit: "bar",
         name: "tyre_pressure",
-        fullName: "Ciśnienie opon",
-        description: "",
+        fullName: "Ciśnienie w oponach",
+        description: "Jest to wartość ciśnienia manometrycznego w oponach. Należy wprowadzić uśrednioną wartość ze wszystkich opon w pojeździe.",
         altOption: false
       }
       // {
@@ -71,6 +71,7 @@ const aeroSetupData = [
         id: 1,
         name: "roll_speed_range_graph",
         fullName: "Dla zakresu prędkości",
+        description: "Wprowadź zakres dla którego ma zostać wygenerowany wykres zależności oporu od prędkości pojazdu.",
         altOption: true,
         altOptionType: "",
         altOptionTitle: "",
@@ -80,6 +81,7 @@ const aeroSetupData = [
         id: 2,
         name: "roll_set_speed_value",
         fullName: "Dla określonej prędkości",
+        description: "Wprowadź dokładną wartość przy której ma być obliczony opór.",
         altOption: true,
         altOptionType: "",
         altOptionTitle: "",

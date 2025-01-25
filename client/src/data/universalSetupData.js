@@ -3,7 +3,7 @@ export const firstStepList = [
     id: 1,
     name: "graph",
     fullName: "Moc oraz moment obrotowy",
-    description: "Wybór tej opcji pozwoli wygenerować wykres mocy oraz momentu obrotowego w zależności od obrotów silnika. W celu uzyskania dokładnego wykresu, wymagany jest pomiar przyspieszenia wraz z obrotami silnika / prędkością pojazdu.",
+    description: "Wybór tej opcji pozwoli wygenerować wykres zależności mocy oraz momentu obrotowego od prędkości obrotowej silnika. W celu uzyskania dokładnego wykresu, wymagany jest pomiar przyspieszenia wraz z obrotami silnika / prędkością pojazdu.",
     altOption: false
   },
   {

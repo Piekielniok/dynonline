@@ -26,7 +26,28 @@ function Results() {
         data: []
       }
     ]
+  });
 
+  const [chartOptions, setChartOptions] = useState({
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "RPM"
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Nm, KM"
+        }
+      }
+    }
   });
 
   useEffect(() => {
@@ -45,8 +66,8 @@ function Results() {
 
           for (let i = 0; i < state.accel_intervals.length; i++) {
             const velocityDelta = (state.accel_intervals[i].max_speed - state.accel_intervals[i].min_speed) / 3.6;
-            const acceleration = velocityDelta / state.accel_intervals[i].time;
-            const force = state.car_weight * acceleration;
+            const graphAcceleration = velocityDelta / state.accel_intervals[i].time;
+            const force = state.car_weight * graphAcceleration;
 
             const minSpeedAirResistance = 0.5 * powerGraphAirDensity * ((state.accel_intervals[i].min_speed / 3.6) * (state.accel_intervals[i].min_speed / 3.6)) * state.drag_coefficient * state.frontal_area;
             const maxSpeedAirResistance = 0.5 * powerGraphAirDensity * ((state.accel_intervals[i].max_speed / 3.6) * (state.accel_intervals[i].max_speed / 3.6)) * state.drag_coefficient * state.frontal_area;
@@ -66,7 +87,8 @@ function Results() {
             const maxEngineRPM = ((state.accel_intervals[i].max_speed * 100000) / (state.wheel_circumference * 60)) * (state[`gear_${state.accel_gear}`] * state.final_drive);
             const avgEngineRPM = minEngineRPM + ((maxEngineRPM - minEngineRPM) / 2);
 
-            const engineHorsepower = (engineTorque * avgEngineRPM) / 7023.49537;
+            const engineHorsepower = (engineTorque * avgEngineRPM) / 7023.49570;
+            console.log(velocityDelta, graphAcceleration, force);
 
             graphRpmArray.push(Math.round(avgEngineRPM));
             graphTorqueArray.push(Math.round((engineTorque + Number.EPSILON) * 100) / 100);
@@ -81,6 +103,13 @@ function Results() {
               }
             );
           }
+          setChartOptions(prevState => {
+            prevState.scales.x.title.text = "RPM";
+            prevState.scales.y.title.text = "Nm, KM";
+            return {
+              ...prevState
+            }
+          });
           setChartData(prevState => {
             prevState.labels = graphRpmArray;
             prevState.datasets[0].data = graphTorqueArray;
@@ -215,6 +244,13 @@ function Results() {
               labelArray.push(i);
               dataArray.push(0.5 * airDensity * ((i / 3.6) * (i / 3.6)) * state.drag_coefficient * state.frontal_area);
             }
+            setChartOptions(prevState => {
+              prevState.scales.x.title.text = "km/h";
+              prevState.scales.y.title.text = "N";
+              return {
+                ...prevState
+              }
+            });
             setChartData(prevState => {
               prevState.labels = labelArray;
               prevState.datasets[0].data = dataArray;
@@ -257,6 +293,13 @@ function Results() {
               const rollingResistanceCoefficient = (((((i / 100) * (i / 100)) * 0.0095) + 0.01) * (1 / state.tyre_pressure)) + 0.005;
               dataArray.push(state.car_weight * 9.80665 * rollingResistanceCoefficient);
             }
+            setChartOptions(prevState => {
+              prevState.scales.x.title.text = "km/h";
+              prevState.scales.y.title.text = "N";
+              return {
+                ...prevState
+              }
+            });
             setChartData(prevState => {
               prevState.labels = labelArray;
               prevState.datasets[0].data = dataArray;
@@ -315,7 +358,7 @@ function Results() {
         result.type === 'aero' && result.speed_type === 'speed_range' ||
         result.type === 'roll' && result.speed_type === 'speed_range' ||
         result.type === 'powerGraph' ?
-        <LineChart chartData={chartData} /> : ''
+        <LineChart chartData={chartData} chartOptions={chartOptions} /> : ''
       }
       {result.type === 'aero' && result.speed_type === 'set_speed' ? (
         <h3 className="result-heading">Przy prędkości {result.speed} km/h opór powietrza wynosi: {Math.round(result.value * 100) / 100}  N</h3>
